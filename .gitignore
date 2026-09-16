@@ -40,3 +40,6 @@ build/
 target/
 src/main/resources/db.properties
 src/main/resources/common/db.properties
+
+### IDE / 工具临时状态（不要提交）###
+.idea/claudeCodeTabState.xml

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+  混合开发：本文件只提供 findAll / findById 两条 statement，
+  接口里的 searchByUsername 用 @Select 注解提供，两者共用一个 namespace。
+-->
+<mapper namespace="com.example.mapper.UserMapperMixed">
+    <select id="findAll" resultType="com.example.entity.User">
+        SELECT id, username, password, email, created_at, updated_at
+        FROM `user`
+        ORDER BY id
+    </select>
+
+    <select id="findById"
+            parameterType="java.lang.Integer"
+            resultType="com.example.entity.User">
+        SELECT id, username, password, email, created_at, updated_at
+        FROM `user`
+        WHERE id = #{id}
+    </select>
+</mapper>

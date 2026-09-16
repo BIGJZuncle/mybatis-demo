@@ -23,6 +23,16 @@
     </environments>
 
     <mappers>
+        <!-- XML 方式：SQL 写在 XML 文件中 -->
         <mapper resource="chapter01/mapper/UserMapper.xml"/>
+
+        <!-- 混合开发：findAll / findById 的 SQL 在 XML 里，searchByUsername 用 @Select 注解 -->
+        <mapper resource="chapter02/mapper/UserMapperMixed.xml"/>
+
+        <!-- 注解方式：使用 class 属性注册，SQL 全部写在接口注解里，不需要 XML 文件 -->
+        <mapper class="com.example.mapper.UserMapperAnnotation"/>
+
+        <!-- 反面教材（3.1 多参数不加 @Param）：注册后才能 getMapper，调用时才会抛异常 -->
+        <mapper class="com.example.mapper.UserMapperBadParam"/>
     </mappers>
 </configuration>
