@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.EmpMapper">
+
+    <!--
+      多对一：多个员工属于一个部门（Emp.dept）。
+      两种写法：
+        1) 一条 JOIN + 内联 <association>：一次查询拿到全部数据（推荐）
+        2) 嵌套 select：<association select="..."/>，先查员工，再按 deptno 逐条查部门
+           —— 写法简单，但 14 个员工会发 1 + 14 条 SQL（N+1 问题）
+    -->
+
+    <!-- ==================== 写法 1：JOIN + 内联 association ==================== -->
+    <resultMap id="empWithDeptMap" type="com.example.entity.Emp">
+        <id     property="empno"    column="empno"/>
+        <result property="ename"    column="ename"/>
+        <result property="job"      column="job"/>
+        <result property="mgr"      column="mgr"/>
+        <result property="hiredate" column="hiredate"/>
+        <result property="sal"      column="sal"/>
+        <result property="comm"     column="comm"/>
+        <result property="deptno"   column="deptno"/>
+
+        <!-- property=Emp 里的属性名；javaType=这个属性是什么类型 -->
+        <association property="dept" javaType="com.example.entity.Dept">
+            <id     property="deptno" column="deptno"/>
+            <result property="dname"  column="dname"/>
+            <result property="loc"    column="loc"/>
+        </association>
+    </resultMap>
+
+    <sql id="empJoinDeptColumns">
+        SELECT e.empno, e.ename, e.job, e.mgr, e.hiredate, e.sal, e.comm, e.deptno,
+               d.dname, d.loc
+        FROM emp e
+        LEFT JOIN dept d ON e.deptno = d.deptno
+    </sql>
+
+    <select id="findAllWithDept" resultMap="empWithDeptMap">
+        <include refid="empJoinDeptColumns"/>
+        ORDER BY e.empno
+    </select>
+
+    <select id="findByIdWithDept" resultMap="empWithDeptMap">
+        <include refid="empJoinDeptColumns"/>
+        WHERE e.empno = #{empno}
+    </select>
+
+    <!-- ==================== 写法 2：嵌套 select ==================== -->
+    <resultMap id="empWithDeptNestedMap" type="com.example.entity.Emp">
+        <id     property="empno"    column="empno"/>
+        <result property="ename"    column="ename"/>
+        <result property="job"      column="job"/>
+        <result property="mgr"      column="mgr"/>
+        <result property="hiredate" column="hiredate"/>
+        <result property="sal"      column="sal"/>
+        <result property="comm"     column="comm"/>
+        <result property="deptno"   column="deptno"/>
+
+        <!-- column="deptno"：把当前行的 deptno 作为参数传给 DeptMapper.findById -->
+        <association property="dept" column="deptno"
+                     javaType="com.example.entity.Dept"
+                     select="com.example.mapper.DeptMapper.findById"/>
+    </resultMap>
+
+    <select id="findAllWithDeptNested" resultMap="empWithDeptNestedMap">
+        SELECT empno, ename, job, mgr, hiredate, sal, comm, deptno
+        FROM emp
+        ORDER BY empno
+    </select>
+
+    <!--
+      按部门号查员工：给 DeptMapper 的 <collection select="..."/> 当嵌套查询用。
+      这里只用 resultType（单表），Emp.dept 留空，避免递归查询。
+    -->
+    <select id="findByDeptno" resultType="com.example.entity.Emp">
+        SELECT empno, ename, job, mgr, hiredate, sal, comm, deptno
+        FROM emp
+        WHERE deptno = #{deptno}
+        ORDER BY empno
+    </select>
+</mapper>

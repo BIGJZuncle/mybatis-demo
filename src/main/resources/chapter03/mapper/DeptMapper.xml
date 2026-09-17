@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.DeptMapper">
+
+    <!--
+      一对多：一个部门有多个员工（Dept.emps）。
+      两种写法：
+        1) 嵌套 select：<collection select="EmpMapper.findByDeptno"/>，先查部门再逐部门查员工
+        2) 一条 LEFT JOIN + 内联 <collection>：一次查询搞定
+           注意 noEmployees 时的「幽灵空对象」，用 notNullColumn 处理
+    -->
+
+    <!-- 基础映射：部门自身的字段 -->
+    <resultMap id="deptMap" type="com.example.entity.Dept">
+        <id     property="deptno" column="deptno"/>
+        <result property="dname"  column="dname"/>
+        <result property="loc"    column="loc"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="deptMap">
+        SELECT deptno, dname, loc FROM dept ORDER BY deptno
+    </select>
+
+    <!-- 同时给 EmpMapper 的 association 嵌套查询调用 -->
+    <select id="findById" resultMap="deptMap">
+        SELECT deptno, dname, loc FROM dept WHERE deptno = #{deptno}
+    </select>
+
+    <!-- ==================== 写法 1：嵌套 select ==================== -->
+    <!-- extends="deptMap" 复用上面的字段映射，只补充 collection -->
+    <resultMap id="deptWithEmpsNestedMap" type="com.example.entity.Dept" extends="deptMap">
+        <!-- column="deptno"：把当前部门的 deptno 作为参数传给 EmpMapper.findByDeptno -->
+        <collection property="emps" column="deptno"
+                    ofType="com.example.entity.Emp"
+                    select="com.example.mapper.EmpMapper.findByDeptno"/>
+    </resultMap>
+
+    <select id="findAllWithEmps" resultMap="deptWithEmpsNestedMap">
+        SELECT deptno, dname, loc FROM dept ORDER BY deptno
+    </select>
+
+    <select id="findByIdWithEmps" resultMap="deptWithEmpsNestedMap">
+        SELECT deptno, dname, loc FROM dept WHERE deptno = #{deptno}
+    </select>
+
+    <!-- ==================== 写法 2：LEFT JOIN + 内联 collection ==================== -->
+    <resultMap id="deptWithEmpsJoinMap" type="com.example.entity.Dept">
+        <id     property="deptno" column="deptno"/>
+        <result property="dname"  column="dname"/>
+        <result property="loc"    column="loc"/>
+
+        <!--
+          notNullColumn="empno"：OPERATIONS 部门没有员工，LEFT JOIN 会留下一行
+          empno 全为 NULL 的记录；不加这个属性，集合里会多出一个「空员工」对象。
+        -->
+        <collection property="emps" ofType="com.example.entity.Emp" notNullColumn="empno">
+            <id     property="empno"    column="empno"/>
+            <result property="ename"    column="ename"/>
+            <result property="job"      column="job"/>
+            <result property="mgr"      column="mgr"/>
+            <result property="hiredate" column="hiredate"/>
+            <result property="sal"      column="sal"/>
+            <result property="comm"     column="comm"/>
+            <result property="deptno"   column="deptno"/>
+        </collection>
+    </resultMap>
+
+    <select id="findAllWithEmpsByJoin" resultMap="deptWithEmpsJoinMap">
+        SELECT d.deptno, d.dname, d.loc,
+               e.empno, e.ename, e.job, e.mgr, e.hiredate, e.sal, e.comm
+        FROM dept d
+        LEFT JOIN emp e ON d.deptno = e.deptno
+        ORDER BY d.deptno, e.empno
+    </select>
+</mapper>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.UserMapperMapping">
+
+    <!--
+      映射器演示：resultType 与 resultMap
+      ============================================================
+      1. resultType 是 MyBatis 默认的映射机制：把结果集的「字段名」与 Java 类的
+         「属性名」对应起来（不是按属性名去找字段！），一致就自动映射。
+         字段名与属性名不一致时，必须用 as 起别名（查询字段 as 属性名），
+         优点：简单；缺点：SQL 啰嗦，且不适合复杂的关联映射。
+
+      2. resultMap 是自定义映射：property(Java) ← column(查询字段)，
+         一次定义可反复复用，还能嵌套 association / collection，
+         是做多表关联的基础。
+
+      强调：resultMap 与 resultType 互斥，同一条 select 只能用一个。
+      ============================================================
+    -->
+
+    <!-- ==================== 1. resultType ==================== -->
+
+    <!-- 字段名与属性名一致 → 自动映射 -->
+    <select id="selectAll" resultType="com.example.entity.User">
+        SELECT id, username, password, email, created_at, updated_at
+        FROM `user`
+        ORDER BY id
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.User">
+        SELECT id, username, password, email, created_at, updated_at
+        FROM `user`
+        WHERE id = #{id}
+    </select>
+
+    <!-- 字段名与 VO 属性名不一致 → 用 as 起别名适配（SQL 与 Java 强耦合） -->
+    <select id="selectAllByVo" resultType="com.example.entity.Vo">
+        SELECT id AS p1, username AS p2, password AS p3
+        FROM `user`
+        ORDER BY id
+    </select>
+
+    <!-- ==================== 2. resultMap ==================== -->
+
+    <!-- VO 的 resultMap：SQL 不用起别名，映射关系写在这里 -->
+    <resultMap id="userVoMap" type="com.example.entity.Vo">
+        <id     property="p1" column="id"/>
+        <result property="p2" column="username"/>
+        <result property="p3" column="password"/>
+    </resultMap>
+
+    <select id="selectAllByVoResultMap" resultMap="userVoMap">
+        SELECT id, username, password
+        FROM `user`
+        ORDER BY id
+    </select>
+
+    <!-- User 实体的 resultMap：显式声明每个字段，便于按需扩展（typeHandler、嵌套映射等） -->
+    <resultMap id="userMap" type="com.example.entity.User">
+        <id     property="id"        column="id"/>
+        <result property="username"  column="username"/>
+        <result property="password"  column="password"/>
+        <result property="email"     column="email"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <select id="selectAllByResultMap" resultMap="userMap">
+        SELECT id, username, password, email, created_at, updated_at
+        FROM `user`
+        ORDER BY id
+    </select>
+
+    <!-- ==================== 3. XML 方式 CRUD ==================== -->
+
+    <insert id="insertUser" parameterType="com.example.entity.User"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `user`(username, password, email)
+        VALUES(#{username}, #{password}, #{email})
+    </insert>
+
+    <update id="updateUser" parameterType="com.example.entity.User">
+        UPDATE `user`
+        SET username = #{username},
+            password = #{password},
+            email    = #{email}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM `user` WHERE id = #{id}
+    </delete>
+</mapper>

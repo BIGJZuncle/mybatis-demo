@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<!--
+  chapter03：映射器深入（resultType / resultMap）+ 多表关联（association / collection）
+  对应测试类：UserMapperMappingTest、EmpDeptMapperTest
+-->
+<configuration>
+    <properties resource="common/db.properties"/>
+
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="logImpl" value="LOG4J"/>
+    </settings>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <!-- 映射器演示：resultType / resultMap / VO -->
+        <mapper resource="chapter03/mapper/UserMapperMapping.xml"/>
+
+        <!-- 多表关联：EmpMapper 的 association 会引用 DeptMapper，反之亦然，注册顺序无所谓 -->
+        <mapper resource="chapter03/mapper/EmpMapper.xml"/>
+        <mapper resource="chapter03/mapper/DeptMapper.xml"/>
+    </mappers>
+</configuration>
