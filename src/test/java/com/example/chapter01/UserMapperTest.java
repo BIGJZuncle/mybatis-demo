@@ -1,7 +1,7 @@
-package com.example;
+package com.example.chapter01;
 
 import com.example.entity.User;
-import com.example.mapper.UserMapper;
+import com.example.chapter01.mapper.UserMapper;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
  * <p>运行前请确认 common/db.properties 中的数据库连接信息正确，
  * 并且已经执行 sql/User_db.sql。</p>
  */
-public class UserMapperTest {
+public class    UserMapperTest {
 
     private SqlSessionFactory sqlSessionFactory;
 

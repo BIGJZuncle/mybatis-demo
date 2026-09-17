@@ -23,13 +23,39 @@
 
 `db.properties` 已被 `.gitignore` 排除，不要把真实密码提交到 Git。
 
+## 代码结构
+
+按实验章节分组：实体类作为公共模型放在 `com.example.entity`，每个章节的 Mapper 放在
+`com.example.chapter0X.mapper`，测试类放在 `com.example.chapter0X`，
+与 `src/main/resources/chapter0X` 下的配置、映射文件一一对应。
+
+```
+src/main/java/com/example/
+├── entity/                公共实体：User、Emp、Dept、Vo
+├── chapter01/mapper/      UserMapper
+├── chapter02/mapper/      UserMapperAnnotation、UserMapperBadParam、UserMapperMixed
+└── chapter03/mapper/      UserMapperMapping、EmpMapper、DeptMapper
+
+src/main/resources/
+├── common/db.properties   数据库连接（已被 .gitignore 排除）
+├── log4j.properties       日志配置
+├── chapter01/             mybatis-config.xml + mapper/UserMapper.xml
+├── chapter02/             mybatis-config.xml + mapper/UserMapperMixed.xml
+└── chapter03/             mybatis-config.xml + mapper/{UserMapperMapping,EmpMapper,DeptMapper}.xml
+
+src/test/java/com/example/
+├── chapter01/UserMapperTest.java
+├── chapter02/UserMapperAnnotationTest.java、UserMapperMixedTest.java
+└── chapter03/UserMapperMappingTest.java、EmpDeptMapperTest.java
+```
+
 ## 目录与章节内容
 
-| 章节 | 配置 | 内容 | 测试类 |
+| 章节 | 配置 | Mapper | 测试类 |
 |---|---|---|---|
-| chapter01 | `chapter01/mybatis-config.xml` | XML 方式：`UserMapper`（findAll / findById） | `UserMapperTest` |
-| chapter02 | 根目录 `mybatis-config.xml` | 注解方式：`UserMapperAnnotation`（CRUD / @Param / #{} 与 ${}）；反面教材 `UserMapperBadParam`；XML+注解混合 `UserMapperMixed` | `UserMapperAnnotationTest`、`UserMapperMixedTest` |
-| chapter03 | `chapter03/mybatis-config.xml` | 映射器深入：`UserMapperMapping`（resultType / resultMap / VO 别名）；多表关联：`EmpMapper`（多对一 association）、`DeptMapper`（一对多 collection） | `UserMapperMappingTest`、`EmpDeptMapperTest` |
+| chapter01 | `chapter01/mybatis-config.xml` | `chapter01.mapper.UserMapper`（XML 方式：findAll / findById） | `chapter01.UserMapperTest` |
+| chapter02 | `chapter02/mybatis-config.xml` | `chapter02.mapper.UserMapperAnnotation`（CRUD / @Param / #{} 与 ${}）、`chapter02.mapper.UserMapperBadParam`（反面教材）、`chapter02.mapper.UserMapperMixed`（XML+注解混合） | `chapter02.UserMapperAnnotationTest`、`chapter02.UserMapperMixedTest` |
+| chapter03 | `chapter03/mybatis-config.xml` | `chapter03.mapper.UserMapperMapping`（resultType / resultMap / VO 别名）、`chapter03.mapper.EmpMapper`（多对一 association）、`chapter03.mapper.DeptMapper`（一对多 collection） | `chapter03.UserMapperMappingTest`、`chapter03.EmpDeptMapperTest` |
 
 要点速记：
 

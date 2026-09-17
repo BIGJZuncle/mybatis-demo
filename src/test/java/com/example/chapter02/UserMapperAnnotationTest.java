@@ -1,8 +1,8 @@
-package com.example;
+package com.example.chapter02;
 
 import com.example.entity.User;
-import com.example.mapper.UserMapperAnnotation;
-import com.example.mapper.UserMapperBadParam;
+import com.example.chapter02.mapper.UserMapperAnnotation;
+import com.example.chapter02.mapper.UserMapperBadParam;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -27,7 +27,7 @@ import static org.junit.Assert.assertTrue;
  * 注解方式 Mapper 测试类（实验 2.3 + 第 2 学时 3.1~3.3）。
  *
  * <p>加载根目录的 {@code mybatis-config.xml}，其中已用
- * {@code <mapper class="com.example.mapper.UserMapperAnnotation"/>} 注册注解接口。</p>
+ * {@code <mapper class="com.example.chapter02.mapper.UserMapperAnnotation"/>} 注册注解接口。</p>
  *
  * <p><b>关于测试数据</b>：课程讲义里写死了「张三 / zhangsan@qq.com / 123456」，
  * 但库里实际数据会变（例如现在 id=1 的用户名是「大象」，其余是 testuser2~10），
@@ -45,7 +45,7 @@ public class UserMapperAnnotationTest {
 
     @Before
     public void init() throws Exception {
-        is = Resources.getResourceAsStream("mybatis-config.xml");
+        is = Resources.getResourceAsStream("chapter02/mybatis-config.xml");
         assertNotNull("找不到 mybatis-config.xml", is);
         SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(is);
         session = factory.openSession(true); // true = 自动提交，方便演示 CRUD

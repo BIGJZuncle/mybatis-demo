@@ -1,7 +1,7 @@
-package com.example;
+package com.example.chapter02;
 
 import com.example.entity.User;
-import com.example.mapper.UserMapperMixed;
+import com.example.chapter02.mapper.UserMapperMixed;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -28,7 +28,7 @@ import static org.junit.Assert.assertNotNull;
  *
  * <p>注册时只用 {@code <mapper resource="chapter02/mapper/UserMapperMixed.xml"/>}
  * 一条即可：MyBatis 注册时会先装载 XML 里的 statement，再解析接口注解，
- * 所以不必（也不应该）再写一条 {@code <mapper class="com.example.mapper.UserMapperMixed"/>}，
+ * 所以不必（也不应该）再写一条 {@code <mapper class="com.example.chapter02.mapper.UserMapperMixed"/>}，
  * 否则同一个 statement id 会被注册两次而报
  * "Mapped Statements collection already contains value"。</p>
  */
@@ -43,7 +43,7 @@ public class UserMapperMixedTest {
 
     @Before
     public void init() throws Exception {
-        is = Resources.getResourceAsStream("mybatis-config.xml");
+        is = Resources.getResourceAsStream("chapter02/mybatis-config.xml");
         assertNotNull("找不到 mybatis-config.xml", is);
         SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(is);
         session = factory.openSession(true);

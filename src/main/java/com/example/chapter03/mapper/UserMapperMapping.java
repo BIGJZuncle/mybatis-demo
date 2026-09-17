@@ -1,4 +1,4 @@
-package com.example.mapper;
+package com.example.chapter03.mapper;
 
 import com.example.entity.User;
 import com.example.entity.Vo;

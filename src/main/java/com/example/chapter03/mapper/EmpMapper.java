@@ -1,4 +1,4 @@
-package com.example.mapper;
+package com.example.chapter03.mapper;
 
 import com.example.entity.Emp;
 import org.apache.ibatis.annotations.Param;

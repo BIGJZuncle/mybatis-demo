@@ -1,9 +1,9 @@
-package com.example;
+package com.example.chapter03;
 
 import com.example.entity.Dept;
 import com.example.entity.Emp;
-import com.example.mapper.DeptMapper;
-import com.example.mapper.EmpMapper;
+import com.example.chapter03.mapper.DeptMapper;
+import com.example.chapter03.mapper.EmpMapper;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;

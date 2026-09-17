@@ -1,4 +1,4 @@
-package com.example.mapper;
+package com.example.chapter02.mapper;
 
 import com.example.entity.User;
 import org.apache.ibatis.annotations.Delete;
@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * <p>注解方式不需要 {@code UserMapperAnnotation.xml}，但必须在
  * {@code mybatis-config.xml} 中用
- * {@code <mapper class="com.example.mapper.UserMapperAnnotation"/>} 注册。</p>
+ * {@code <mapper class="com.example.chapter02.mapper.UserMapperAnnotation"/>} 注册。</p>
  *
  * <p>所有 SQL 都写成带反引号的 {@code `user`}，因为 user 在 MySQL 8 中容易和
  * 内置函数混淆；开了 mapUnderscoreToCamelCase，所以 created_at 能自动映射到 createdAt。</p>

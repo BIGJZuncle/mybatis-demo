@@ -1,8 +1,8 @@
-package com.example;
+package com.example.chapter03;
 
 import com.example.entity.User;
 import com.example.entity.Vo;
-import com.example.mapper.UserMapperMapping;
+import com.example.chapter03.mapper.UserMapperMapping;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;

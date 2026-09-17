@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.mapper.EmpMapper">
+<mapper namespace="com.example.chapter03.mapper.EmpMapper">
 
     <!--
       多对一：多个员工属于一个部门（Emp.dept）。
@@ -62,7 +62,7 @@
         <!-- column="deptno"：把当前行的 deptno 作为参数传给 DeptMapper.findById -->
         <association property="dept" column="deptno"
                      javaType="com.example.entity.Dept"
-                     select="com.example.mapper.DeptMapper.findById"/>
+                     select="com.example.chapter03.mapper.DeptMapper.findById"/>
     </resultMap>
 
     <select id="findAllWithDeptNested" resultMap="empWithDeptNestedMap">
